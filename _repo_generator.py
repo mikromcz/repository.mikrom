@@ -1,33 +1,20 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import os
 import hashlib
-import zipfile
 from xml.dom import minidom
-import shutil
-from datetime import datetime
+import zipfile
 
 class Generator:
     """
-    Generates a Kodi addon repository
+    Generates Kodi repository files
     """
 
     def __init__(self):
-        """
-        Initialize Generator
-        """
         self.tools_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__))))
-        self.output_path = os.path.join(self.tools_path, "repo")
-        self.zips_path = os.path.join(self.output_path, "zips")
+        self.repo_path = os.path.join(self.tools_path, "repo")
 
-        # Create output path if it doesn't exist
-        if not os.path.exists(self.output_path):
-            os.makedirs(self.output_path)
-
-        # Create zips path if it doesn't exist
-        if not os.path.exists(self.zips_path):
-            os.makedirs(self.zips_path)
+        # Create repo path if it doesn't exist
+        if not os.path.exists(self.repo_path):
+            os.makedirs(self.repo_path)
 
     def _clean_xml(self, element):
         """
@@ -39,90 +26,16 @@ class Generator:
                     element.removeChild(node)
             else:
                 self._clean_xml(node)
-                # Remove excessive newlines between elements
                 if node.nodeType == node.ELEMENT_NODE:
                     for child in node.childNodes:
                         if child.nodeType == child.TEXT_NODE:
                             child.nodeValue = child.nodeValue.strip()
 
-    def _get_addon_metadata(self, addon_path):
-        """
-        Extract addon metadata from addon.xml
-        """
-        path = os.path.join(addon_path, "addon.xml")
-        if not os.path.exists(path):
-            return None
-
-        try:
-            doc = minidom.parse(path)
-            addon = doc.getElementsByTagName("addon")[0]
-            return {
-                "id": addon.getAttribute("id"),
-                "version": addon.getAttribute("version")
-            }
-        except Exception as e:
-            print(f"Failed to get metadata for {addon_path}: {str(e)}")
-            return None
-
-    def _create_zip(self, addon_path, addon_id, version):
-        """
-        Create a zip file for the addon
-        """
-        addon_folder = os.path.join(self.zips_path, addon_id)
-        if not os.path.exists(addon_folder):
-            os.makedirs(addon_folder)
-
-        final_zip = os.path.join(addon_folder, f"{addon_id}-{version}.zip")
-
-        if not os.path.exists(final_zip):
-            zip_file = zipfile.ZipFile(final_zip, 'w', compression=zipfile.ZIP_DEFLATED)
-            root_len = len(os.path.dirname(os.path.abspath(addon_path)))
-
-            for root, dirs, files in os.walk(addon_path):
-                # Remove any .git folders
-                if '.git' in dirs:
-                    dirs.remove('.git')
-
-                archive_root = os.path.abspath(root)[root_len:]
-
-                for f in files:
-                    fullpath = os.path.join(root, f)
-                    archive_name = os.path.join(archive_root, f)
-
-                    if not f.startswith('.'):
-                        zip_file.write(fullpath, archive_name, zipfile.ZIP_DEFLATED)
-
-            zip_file.close()
-
-        return final_zip
-
-    def _generate_md5(self, path):
-        """
-        Generate MD5 hash for a file
-        """
-        with open(path, 'rb') as f:
-            return hashlib.md5(f.read()).hexdigest()
-
-    def _save_addons_xml(self, addons, path):
-        """
-        Save addons.xml and addons.xml.md5
-        """
-        # Clean up the XML
-        self._clean_xml(addons.documentElement)
-
-        # Save addons.xml without excessive newlines
-        with open(path, 'w', encoding='utf-8') as f:
-            addons.writexml(f, encoding='utf-8', indent="  ", newl="\n", addindent="  ")
-
-        # Save addons.xml.md5
-        with open(path + '.md5', 'w') as f:
-            f.write(self._generate_md5(path))
-
-    def _create_repository_addon(self):
+    def _create_repository_zip(self):
         """
         Create the repository addon zip
         """
-        repo_path = os.path.join(self.zips_path, "repository.mikrom")
+        repo_path = os.path.join(self.repo_path, "repository.mikrom")
         if not os.path.exists(repo_path):
             os.makedirs(repo_path)
 
@@ -131,27 +44,56 @@ class Generator:
         if not os.path.exists(zip_path):
             zip_file = zipfile.ZipFile(zip_path, 'w', compression=zipfile.ZIP_DEFLATED)
 
-            # Add addon.xml to the zip
+            # Add addon.xml to the zip inside repository.mikrom folder
             addon_xml_path = os.path.join(self.tools_path, "addon.xml")
             if os.path.exists(addon_xml_path):
-                zip_file.write(addon_xml_path, "addon.xml")
+                zip_file.write(addon_xml_path, "repository.mikrom/addon.xml")
 
             # Add icon.png and fanart.jpg if they exist
             for asset in ["icon.png", "fanart.jpg"]:
                 asset_path = os.path.join(self.tools_path, asset)
                 if os.path.exists(asset_path):
-                    zip_file.write(asset_path, asset)
+                    zip_file.write(asset_path, f"repository.mikrom/{asset}")
 
             zip_file.close()
+
+    def _generate_md5(self, path):
+        """
+        Generate MD5 hash for a file
+        """
+        with open(path, 'rb') as f:
+            return hashlib.md5(f.read()).hexdigest()
+
+    def _get_version_from_zip(self, zip_path):
+        """
+        Extract addon version from addon.xml in the zip file
+        """
+        try:
+            with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+                # Find addon.xml file
+                addon_xml = None
+                for filename in zip_ref.namelist():
+                    if filename.endswith('addon.xml'):
+                        addon_xml = filename
+                        break
+
+                if addon_xml:
+                    with zip_ref.open(addon_xml) as f:
+                        doc = minidom.parse(f)
+                        addon = doc.getElementsByTagName("addon")[0]
+                        return addon.getAttribute("version")
+        except Exception as e:
+            print(f"Error reading zip {zip_path}: {str(e)}")
+        return None
 
     def generate_repo(self):
         """
         Generate the repository
         """
-        print("Generating repository...")
+        print("Generating repository files...")
 
         # Create repository addon zip first
-        self._create_repository_addon()
+        self._create_repository_zip()
 
         # Create new addons.xml
         addons_xml = minidom.Document()
@@ -164,32 +106,55 @@ class Generator:
             repo_doc = minidom.parse(repo_addon_path)
             addons_root.appendChild(repo_doc.getElementsByTagName("addon")[0])
 
-        # Process all other directories in the root
-        for addon_folder in os.listdir(self.tools_path):
-            # Skip if not a directory or starts with '.' or is 'repo'
-            path = os.path.join(self.tools_path, addon_folder)
-            if not os.path.isdir(path) or addon_folder.startswith('.') or addon_folder == 'repo':
+        # Process addon folders in repo directory
+        for addon_folder in os.listdir(self.repo_path):
+            folder_path = os.path.join(self.repo_path, addon_folder)
+            if not os.path.isdir(folder_path) or addon_folder.startswith('.'):
                 continue
 
-            # Get addon metadata
-            metadata = self._get_addon_metadata(path)
-            if metadata is None:
-                print(f"Skipping {addon_folder} - no addon.xml found")
+            # Find the latest version zip file
+            zip_files = [f for f in os.listdir(folder_path) if f.endswith('.zip')]
+            if not zip_files:
                 continue
 
-            print(f"Processing {metadata['id']} version {metadata['version']}")
+            latest_zip = None
+            latest_version = None
 
-            # Create zip file
-            self._create_zip(path, metadata['id'], metadata['version'])
+            for zip_file in zip_files:
+                zip_path = os.path.join(folder_path, zip_file)
+                version = self._get_version_from_zip(zip_path)
+                if version:
+                    if latest_version is None or version > latest_version:
+                        latest_version = version
+                        latest_zip = zip_path
 
-            # Copy addon.xml to addons.xml
-            addon_xml_path = os.path.join(path, "addon.xml")
-            doc = minidom.parse(addon_xml_path)
-            addons_root.appendChild(doc.getElementsByTagName("addon")[0])
+            if latest_zip:
+                # Extract addon.xml from the zip and add to addons.xml
+                with zipfile.ZipFile(latest_zip, 'r') as zip_ref:
+                    addon_xml = None
+                    for filename in zip_ref.namelist():
+                        if filename.endswith('addon.xml'):
+                            addon_xml = filename
+                            break
 
-        # Save files
-        self._save_addons_xml(addons_xml, os.path.join(self.zips_path, "addons.xml"))
-        print("Repository generated successfully!")
+                    if addon_xml:
+                        with zip_ref.open(addon_xml) as f:
+                            doc = minidom.parse(f)
+                            addon = doc.getElementsByTagName("addon")[0]
+                            print(f"Processing {addon.getAttribute('id')} version {addon.getAttribute('version')}")
+                            addons_root.appendChild(addon)
+
+        # Clean up and save addons.xml
+        self._clean_xml(addons_xml.documentElement)
+        addons_xml_path = os.path.join(self.repo_path, "addons.xml")
+        with open(addons_xml_path, 'w', encoding='utf-8') as f:
+            addons_xml.writexml(f, encoding='utf-8', indent="  ", newl="\n", addindent="  ")
+
+        # Generate MD5
+        with open(addons_xml_path + '.md5', 'w') as f:
+            f.write(self._generate_md5(addons_xml_path))
+
+        print("Repository files generated successfully!")
 
 if __name__ == "__main__":
     Generator().generate_repo()
