@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
   <addons>
-    <addon id="repository.mikrom" name="mikrom's repository" version="1.0.0" provider-name="mikrom">
+    <addon id="repository.mikrom" name="mikrom's repository" provider-name="mikrom" version="1.0.0">
       <extension point="xbmc.addon.repository" name="mikrom's repository">
         <dir>
           <info compressed="false">https://raw.githubusercontent.com/mikromcz/repository.mikrom/main/repo/addons.xml</info>
@@ -10,7 +10,7 @@
       </extension>
       <extension point="xbmc.addon.metadata">
         <summary lang="cs_CZ">mikrom's Kodi repository</summary>
-        <description lang="cs_CZ">Repozitář pro TALK.cz a v budoucnu možná i další doplňky</description>
+        <description lang="cs_CZ">Repozitář pro TALK.cz a v budoucnu možná i další doplňky.</description>
         <platform>all</platform>
       </extension>
     </addon>
@@ -41,24 +41,10 @@
           <screenshot>resources/screenshot-3.jpg</screenshot>
           <screenshot>resources/screenshot-4.png</screenshot>
         </assets>
-        <news>Neumím programovat, a už vůbec ne v Pythonu. Drtivou většinu kódu vygeneroval Claude.AI :)
+        <news>[COLOR slategrey]Poznámka: Neumím programovat, a už vůbec ne v Pythonu. Drtivou většinu kódu vygeneroval Claude.AI. A leccos také GitHub Copilot :)[/COLOR]
 
 1.0.0 (2024-12-24)
 * První veřejná verze</news>
-      </extension>
-    </addon>
-    <addon id="repository.mikrom" name="mikrom's repository" version="1.0.0" provider-name="mikrom">
-      <extension point="xbmc.addon.repository" name="mikrom's repository">
-        <dir>
-          <info compressed="false">https://raw.githubusercontent.com/mikromcz/repository.mikrom/main/repo/addons.xml</info>
-          <checksum>https://raw.githubusercontent.com/mikromcz/repository.mikrom/main/repo/addons.xml.md5</checksum>
-          <datadir zip="true">https://raw.githubusercontent.com/mikromcz/repository.mikrom/main/repo/</datadir>
-        </dir>
-      </extension>
-      <extension point="xbmc.addon.metadata">
-        <summary lang="cs_CZ">mikrom's Kodi repository</summary>
-        <description lang="cs_CZ">Repozitář pro TALK.cz a v budoucnu možná i další doplňky</description>
-        <platform>all</platform>
       </extension>
     </addon>
   </addons>

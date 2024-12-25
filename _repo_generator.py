@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import os
 import hashlib
 from xml.dom import minidom
@@ -35,27 +38,26 @@ class Generator:
         """
         Create the repository addon zip
         """
-        repo_path = os.path.join(self.repo_path, "repository.mikrom")
-        if not os.path.exists(repo_path):
-            os.makedirs(repo_path)
+        # Create the repository folder in repo directory
+        repo_folder = os.path.join(self.repo_path, "repository.mikrom")
+        os.makedirs(repo_folder, exist_ok=True)
 
-        # Create the zip file for the repository addon
-        zip_path = os.path.join(repo_path, "repository.mikrom-1.0.0.zip")
-        if not os.path.exists(zip_path):
-            zip_file = zipfile.ZipFile(zip_path, 'w', compression=zipfile.ZIP_DEFLATED)
+        # Create the zip file directly
+        zip_path = os.path.join(repo_folder, "repository.mikrom-1.0.0.zip")
+        if os.path.exists(zip_path):
+            os.remove(zip_path)
 
-            # Add addon.xml to the zip inside repository.mikrom folder
+        with zipfile.ZipFile(zip_path, 'w', compression=zipfile.ZIP_DEFLATED) as zip_ref:
+            # Add addon.xml
             addon_xml_path = os.path.join(self.tools_path, "addon.xml")
             if os.path.exists(addon_xml_path):
-                zip_file.write(addon_xml_path, "repository.mikrom/addon.xml")
+                zip_ref.write(addon_xml_path, "repository.mikrom/addon.xml")
 
-            # Add icon.png and fanart.jpg if they exist
+            # Add assets if they exist
             for asset in ["icon.png", "fanart.jpg"]:
                 asset_path = os.path.join(self.tools_path, asset)
                 if os.path.exists(asset_path):
-                    zip_file.write(asset_path, f"repository.mikrom/{asset}")
-
-            zip_file.close()
+                    zip_ref.write(asset_path, f"repository.mikrom/{asset}")
 
     def _generate_md5(self, path):
         """
@@ -100,11 +102,18 @@ class Generator:
         addons_root = addons_xml.createElement('addons')
         addons_xml.appendChild(addons_root)
 
+        # Keep track of processed addon IDs
+        processed_addons = set()
+
         # Add repository addon to addons.xml first
         repo_addon_path = os.path.join(self.tools_path, "addon.xml")
         if os.path.exists(repo_addon_path):
             repo_doc = minidom.parse(repo_addon_path)
-            addons_root.appendChild(repo_doc.getElementsByTagName("addon")[0])
+            repo_addon = repo_doc.getElementsByTagName("addon")[0]
+            addon_id = repo_addon.getAttribute("id")
+            if addon_id not in processed_addons:
+                addons_root.appendChild(repo_addon)
+                processed_addons.add(addon_id)
 
         # Process addon folders in repo directory
         for addon_folder in os.listdir(self.repo_path):
@@ -141,8 +150,11 @@ class Generator:
                         with zip_ref.open(addon_xml) as f:
                             doc = minidom.parse(f)
                             addon = doc.getElementsByTagName("addon")[0]
-                            print(f"Processing {addon.getAttribute('id')} version {addon.getAttribute('version')}")
-                            addons_root.appendChild(addon)
+                            addon_id = addon.getAttribute("id")
+                            if addon_id not in processed_addons:
+                                print(f"Processing {addon_id} version {addon.getAttribute('version')}")
+                                addons_root.appendChild(addon)
+                                processed_addons.add(addon_id)
 
         # Clean up and save addons.xml
         self._clean_xml(addons_xml.documentElement)
