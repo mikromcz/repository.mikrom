@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<addons><addon id="repository.mikrom" name="mikrom's repository" version="1.0.0" provider-name="mikrom">
+    <extension point="xbmc.addon.repository" name="mikrom's repository">
+        <dir>
+            <info compressed="false">https://raw.githubusercontent.com/mikromcz/repository.mikrom/master/repo/zips/addons.xml</info>
+            <checksum>https://raw.githubusercontent.com/mikromcz/repository.mikrom/master/repo/zips/addons.xml.md5</checksum>
+            <datadir zip="true">https://raw.githubusercontent.com/mikromcz/repository.mikrom/master/repo/zips/</datadir>
+        </dir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>mikrom's Kodi repository</summary>
+        <description>Repository for TALK.cz and other addons</description>
+        <platform>all</platform>
+    </extension>
+</addon><addon id="plugin.video.talk.cz" name="TALK" provider-name="mikrom" version="1.0.0">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0" />
+        <import addon="script.module.requests" version="2.22.0" />
+        <import addon="script.module.beautifulsoup4" version="4.6.2" />
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="addon.py">
+        <provides>video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="cs_CZ">[COLOR limegreen]TALK[/COLOR] | Nejlepší české podcasty</summary>
+        <description lang="cs_CZ">Sledujte [COLOR limegreen]STANDASHOW[/COLOR], [COLOR limegreen]TECH GUYS[/COLOR], [COLOR limegreen]JADRNOU VĚDU[/COLOR], [COLOR limegreen]ZA HRANICÍ[/COLOR], [COLOR limegreen]MOVIE WITCHES[/COLOR], [COLOR limegreen]DESIGN TALK[/COLOR] a další pořady z talk.cz pohodlně v Kodi.</description>
+        <disclaimer lang="cs_CZ">Neoficiální doplněk bez přímé vazby na TALK TV. Poskytuje přístup k obsahu dostupnému na talktv.cz pro přihlášené uživatele. Veškerý obsah a ochranné známky náleží jejich příslušným vlastníkům.</disclaimer>
+        <website>https://www.talk.cz/</website>
+        <source>https://github.com/mikromcz/plugin.video.talk.cz</source>
+        <platform>all</platform>
+        <license>MIT</license>
+        <language>cs</language>
+        <reuselanguageinvoker>false</reuselanguageinvoker>
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+            <screenshot>resources/screenshot-1.jpg</screenshot>
+            <screenshot>resources/screenshot-2.jpg</screenshot>
+            <screenshot>resources/screenshot-3.jpg</screenshot>
+            <screenshot>resources/screenshot-4.png</screenshot>
+        </assets>
+        <news>Neumím programovat, a už vůbec ne v Pythonu. Drtivou většinu kódu vygeneroval Claude.AI :)
+
+1.0.0 (2024-12-24)
+* První veřejná verze
+        </news>
+    </extension>
+</addon></addons>
