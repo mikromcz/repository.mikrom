@@ -5,6 +5,7 @@
             <info compressed="false">https://raw.githubusercontent.com/mikromcz/repository.mikrom/main/repo/addons.xml</info>
             <checksum>https://raw.githubusercontent.com/mikromcz/repository.mikrom/main/repo/addons.xml.md5</checksum>
             <datadir zip="true">https://raw.githubusercontent.com/mikromcz/repository.mikrom/main/repo/</datadir>
+            <artdir>https://raw.githubusercontent.com/mikromcz/repository.mikrom/main/repo/</artdir>
         </dir>
     </extension>
     <extension point="xbmc.addon.metadata">
