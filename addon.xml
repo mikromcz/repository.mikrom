@@ -12,5 +12,8 @@
         <summary lang="cs_CZ">mikrom's Kodi repository</summary>
         <description lang="cs_CZ">Repozitář pro TALK.cz a v budoucnu možná i další doplňky.</description>
         <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
     </extension>
 </addon>
