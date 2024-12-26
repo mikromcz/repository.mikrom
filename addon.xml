@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="repository.mikrom" name="mikrom's repository" provider-name="mikrom" version="1.0.0">
-    <extension point="xbmc.addon.repository" name="mikrom's repository">
+    <extension point="xbmc.addon.repository">
         <dir>
             <info compressed="false">https://raw.githubusercontent.com/mikromcz/repository.mikrom/main/repo/addons.xml</info>
             <checksum>https://raw.githubusercontent.com/mikromcz/repository.mikrom/main/repo/addons.xml.md5</checksum>
             <datadir zip="true">https://raw.githubusercontent.com/mikromcz/repository.mikrom/main/repo/</datadir>
-            <artdir>https://raw.githubusercontent.com/mikromcz/repository.mikrom/main/repo/</artdir>
         </dir>
     </extension>
     <extension point="xbmc.addon.metadata">
@@ -13,7 +12,7 @@
         <description lang="cs_CZ">Repozitář pro TALK.cz a v budoucnu možná i další doplňky.</description>
         <platform>all</platform>
         <assets>
-            <icon>resources/icon.png</icon>
+            <icon>icon.png</icon>
         </assets>
     </extension>
 </addon>
