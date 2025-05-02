@@ -17,7 +17,7 @@
         </assets>
       </extension>
     </addon>
-    <addon id="plugin.video.talk.cz" name="TALK" provider-name="mikrom" version="1.3.0">
+    <addon id="plugin.video.talk.cz" name="TALK" provider-name="mikrom" version="1.4.0">
       <requires>
         <import addon="xbmc.python" version="3.0.0"/>
         <import addon="script.module.requests" version="2.22.0"/>
@@ -47,6 +47,8 @@ Doplněk vyžaduje aktivní předplatné na TALK.cz.</description>
           <screenshot>resources/screenshot-4.png</screenshot>
         </assets>
         <news>[COLOR slategrey]Poznámka: Neumím programovat, a už vůbec ne v Pythonu. Drtivou většinu kódu vygeneroval Claude.AI. A leccos také GitHub Copilot :)[/COLOR]
+1.4.0 (2025-05-02)
+• Změna pořadí hlavního menu - TALKNEWS, POSLEDNÍ VIDEA, ...
 
 1.3.0 (2025-01-26)
 • Podpora TALKNEWS
