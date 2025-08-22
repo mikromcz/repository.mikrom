@@ -17,7 +17,7 @@
         </assets>
       </extension>
     </addon>
-    <addon id="plugin.video.talk.cz" name="TALK" provider-name="mikrom" version="1.5.0">
+    <addon id="plugin.video.talk.cz" name="TALK" provider-name="mikrom" version="1.5.1">
       <requires>
         <import addon="xbmc.python" version="3.0.0"/>
         <import addon="script.module.requests" version="2.22.0"/>
@@ -47,6 +47,10 @@ Doplněk vyžaduje aktivní předplatné na TALK.cz.</description>
           <screenshot>resources/screenshot-4.png</screenshot>
         </assets>
         <news>[COLOR slategrey]Poznámka: Neumím programovat, a už vůbec ne v Pythonu. Drtivou většinu kódu vygeneroval Claude.AI. A leccos také GitHub Copilot :)[/COLOR]
+
+1.5.1 (2025-08-22)
+• Oprava kontroly platnosti cookie a přidání okna s upozorněním na neplatnou session cookie
+
 1.5.0 (2025-08-04)
 • Úprava názvů položek menu (normální písmena, velká pouze pro názvy pořadů)
 • Oprava testování session cookie a přidání session cache s 1hodinovou platností
