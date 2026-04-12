@@ -17,7 +17,7 @@
         </assets>
       </extension>
     </addon>
-    <addon id="plugin.video.talk.cz" name="TALK" provider-name="mikrom" version="1.5.1">
+    <addon id="plugin.video.talk.cz" name="TALK" provider-name="mikrom" version="1.6.0">
       <requires>
         <import addon="xbmc.python" version="3.0.0"/>
         <import addon="script.module.requests" version="2.22.0"/>
@@ -37,7 +37,7 @@ Doplněk vyžaduje aktivní předplatné na TALK.cz.</description>
         <platform>all</platform>
         <license>MIT</license>
         <language>cs</language>
-        <reuselanguageinvoker>false</reuselanguageinvoker>
+        <reuselanguageinvoker>true</reuselanguageinvoker>
         <assets>
           <icon>resources/icon.png</icon>
           <fanart>resources/fanart.jpg</fanart>
@@ -47,6 +47,23 @@ Doplněk vyžaduje aktivní předplatné na TALK.cz.</description>
           <screenshot>resources/screenshot-4.png</screenshot>
         </assets>
         <news>[COLOR slategrey]Poznámka: Neumím programovat, a už vůbec ne v Pythonu. Drtivou většinu kódu vygeneroval Claude.AI. A leccos také GitHub Copilot :)[/COLOR]
+1.6.0 (2025-10-14)
+• Přidání podpory pro VIP streamy
+• Do kontextového menu přidána možnost přejít na YouTube kanál tvůrce (pokud je dostupný)
+• Sjednocení ikon do jednotného stylu FontAwesome
+• Oprava/vylepšení prehrávání od uložené pozice na webu - zejména v menu "Pokračovat v přehrávání"
+• Aktualizace nastavení na verzi Kodi 19+ (např. přidání popisků k nastavením)
+• Nahrazení ListItem.setProperty("TotalTime", ...) metodou InfoTagVideo.setResumePoint()
+• Nahrazení ListItem.setProperty("StartOffset, ...) metodou InfoTagVideo.setResumePoint()
+• Nahrazení ListItem.setInfo("video", {...}) metodami InfoTagVideo
+• Refaktoring: odstranění ~400 řádků mrtvého kódu (nepoužitelné přihlášení přes email/heslo)
+• Refaktoring: sjednocení validace session do require_session(), extrakce _API_HEADERS
+• Oprava: TALKNEWS monitor již neblokuje ukončení Kodi (waitForAbort místo time.sleep)
+• Vylepšení TALKNEWS notifikací - ikona doplňku, název pořadu velkými písmeny
+• Nastavení "Preferovaný stream" (HLS/MP4) je nyní funkční
+• Oprava: chyba sítě již nezpůsobí falešné hlášení o neplatné cookie (rozlišení síťové chyby vs. neplatná cookie)
+• Automatický retry při dočasném výpadku sítě (timeout 10s, 1 opakování po 2s)
+• Přidány kategorie archivu: Duely hostů a Volby 2025
 
 1.5.1 (2025-08-22)
 • Oprava kontroly platnosti cookie a přidání okna s upozorněním na neplatnou session cookie
@@ -70,10 +87,10 @@ Doplněk vyžaduje aktivní předplatné na TALK.cz.</description>
 1.2.0 (2024-12-30)
 • Kategorie Ostatní
 • Kompatibilita s ukládáním pozice přehrávání na webu - při přehrávání v Kodi se pozice průběžně ukládá na web, a video je z kontextové nabídky možné spustit od pozice uložené na webu.
-• Rozšíření popisu videa (u některých videí na webu je dostupný rozšířený popis &quot;Zobrazit více...&quot;, který se nyní zobrazí i v Kodi)
-• Přidání položky &quot;Informace o videu&quot; do kontextové nabídky. Včetně &quot;obsazení&quot;.
+• Rozšíření popisu videa (u některých videí na webu je dostupný rozšířený popis "Zobrazit více...", který se nyní zobrazí i v Kodi)
+• Přidání položky "Informace o videu" do kontextové nabídky. Včetně "obsazení".
 • V posledních, populárních apd. videích se zobrazuje název tvůrce
-• Přidání položky &quot;Přejít na tvůrce&quot; do kontextového menu
+• Přidání položky "Přejít na tvůrce" do kontextového menu
 
 1.1.0 (2024-12-26)
 • Přidán webserver pro pohodlné zadání PHPSESSID přes webové rozhraní
